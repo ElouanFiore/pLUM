@@ -1,0 +1,20 @@
+---
+- name: Install pLUM on your server
+  hosts: all
+  tasks:
+
+    - name: Copy deb package to destination
+      ansible.builtin.copy:
+        src: ./pLUM-package.deb
+        dest: /tmp/pLUM.deb
+
+    - name: Install pLUM
+      become: true
+      ansible.builtin.apt:
+        deb: /tmp/pLUM.deb
+        state: present
+
+    - name: Delete deb package
+      ansible.builtin.file:
+        path: /tmp/pLUM.deb
+        state: absent
