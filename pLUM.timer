@@ -1,0 +1,9 @@
+[Unit]
+Description=Daily pLUM
+
+[Timer]
+OnCalendar=*-*-* %HOUR%
+Persistent=true
+
+[Install]
+WantedBy=timers.target

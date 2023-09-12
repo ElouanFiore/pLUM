@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+echo Reloading systemctl daemon ...
+
+/usr/bin/systemctl daemon-reload
+
+echo Enabling and starting pLUM.timer ...
+
+/usr/bin/systemctl enable --now pLUM.timer

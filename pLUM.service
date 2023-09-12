@@ -1,0 +1,7 @@
+[Unit]
+Description=python Linux Update Manager
+After=network.target network-online.target systemd-networkd.service NetworkManager.service connman.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/pLUM

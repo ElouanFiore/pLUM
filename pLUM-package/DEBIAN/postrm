@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo Reloading systemctl daemon ...
+
+/usr/bin/systemctl daemon-reload

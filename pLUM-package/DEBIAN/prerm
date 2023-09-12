@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo Stopping and disabling pLUM.timer ...
+
+/usr/bin/systemctl disable --now pLUM.timer
