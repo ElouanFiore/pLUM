@@ -1,6 +1,6 @@
 Package: plum-linux-updates-manager
-Version: 0.9
+Version: 1
 Maintainer: Elouan FIORE
 Architecture: all
-Description: To manage linuxpdate via Telegram
+Description: To manage Linux updates via Telegram
 Depends: python3
