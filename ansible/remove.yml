@@ -1,7 +1,9 @@
 ---
 - name: Remove pLUM from your server
+  hosts: all
   tasks:
     - name: Remove pLUM
+      become: true
       ansible.builtin.apt:
         name: plum-linux-updates-manager
         state: absent
