@@ -2,8 +2,23 @@
 - name: Remove pLUM from your server
   hosts: all
   tasks:
+
     - name: Remove pLUM
       become: true
       ansible.builtin.apt:
         name: plum-linux-updates-manager
         state: absent
+
+    - name: Enable and start apt daily update
+      become: true
+      ansible.builtin.systemd:
+        name: apt-daily.timer
+        state: started
+        enabled: true
+
+    - name: Enable and start apt daily upgarde
+      become: true
+      ansible.builtin.systemd:
+        name: apt-daily-upgrade.timer
+        state: started
+        enabled: true

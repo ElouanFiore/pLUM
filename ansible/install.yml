@@ -18,3 +18,17 @@
       ansible.builtin.file:
         path: /tmp/pLUM.deb
         state: absent
+
+    - name: Disable and stop apt daily update
+      become: true
+      ansible.builtin.systemd:
+        name: apt-daily.timer
+        state: stopped
+        enabled: false
+
+    - name: Disable and stop apt daily upgarde
+      become: true
+      ansible.builtin.systemd:
+        name: apt-daily-upgrade.timer
+        state: stopped
+        enabled: false
