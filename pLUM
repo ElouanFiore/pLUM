@@ -5,35 +5,49 @@ def sendNotif(msg):
     url = f"https://api.telegram.org/bot%BOT_TOKEN%/sendMessage?chat_id=%CHAT_ID%&text={message}&parse_mode=HTML"
     print(requests.get(url).json())
 
-def getUpgardes():
-    subprocess.run(["apt-get", "update"], capture_output=True)
-    upgrade = subprocess.run(["apt-get", "--simulate", "full-upgrade"], capture_output=True).stdout.decode()
-    reg = re.compile(r'\n\s{2}(.+)')
-    
-    packages = []
-    for r in reg.findall(upgrade):
-        packages += r.split(' ')
+def getPackages(action:str, stdout:str)->list:
+    reg = re.compile(rf'{action}:\n(  .+(?:\n  .+)*)')
+    processed = reg.findall(stdout)
+
+    postreg = re.compile(r'(\S+)')
+    packages = [] 
+
+    for p in processed:
+        packages += postreg.findall(p)
 
     return packages
 
-def getHostname():
+def getHostname()->str:
     with open('/etc/hostname', 'r') as f:
         name = f.read().rstrip()
         f.close()
 
     return name
 
+def setupMessage(data:dict)->str:
+    notification = ""
+
+    for message, packages in data.items():
+        l = len(packages)
+        if l > 0:
+            notification += f"\n<b>{str(l)}</b> {message}"
+            for i in packages:
+                notification += f"\n  - {i}"
+
+    if len(notification) == 0:
+        return ""
+    else:
+        return f"<u>pLUM on {getHostname()} :</u>" + notification
+
 if __name__ == "__main__":
 
-    up = getUpgardes()
-    if len(up) > 0:
-        if len(up) == 1:    
-            message = f"<b>pLUM on <u>{getHostname()}</u> - 1 update available:</b>"
-        else:
-            message = f"<b>pLUM on <u>{getHostname()}</u> - {len(up)} updates available:</b>"
+    subprocess.run(["apt-get", "update"], capture_output=True)
+    stdout = subprocess.run(["apt-get", "--simulate", "full-upgrade"], capture_output=True).stdout.decode()
 
-        for i in up:
-            message += f"\n - {i}"
+    up = getPackages("upgraded", stdout)
+    rm = getPackages("no longer required", stdout)
 
+    message = setupMessage({"to upgrade":up, "to remove":rm})
+
+    if message != "":
         sendNotif(message)
-
